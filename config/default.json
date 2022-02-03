@@ -1,0 +1,15 @@
+{
+  "port": 3001,
+  "database": {
+    "database": "mvpf-screening",
+    "username": "root",
+    "password": "",
+    "host": "localhost",
+    "dialect": "mysql",
+    "logging": false
+  },
+  "authToken": {
+    "secret": "Iv21K5ZqeN4mvaZXo9szVS0nZakI8bIz",
+    "expiration": 2592000
+  }
+}
