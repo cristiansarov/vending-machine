@@ -11,6 +11,8 @@ import SecurityService from './security/security.service';
 import JwtStrategy from './security/strategies/jwt.strategy';
 import LocalStrategy from './security/strategies/local.strategy';
 import { SecurityController } from './security/security.controller';
+import ProductService from './product/product.service';
+import ProductController from './product/product.controller';
 
 
 @Module({
@@ -25,6 +27,7 @@ import { SecurityController } from './security/security.controller';
   controllers: [
     UserController,
     SecurityController,
+    ProductController,
   ],
   providers: [
     {
@@ -47,6 +50,7 @@ import { SecurityController } from './security/security.controller';
     LocalStrategy,
     SecurityService,
     UserService,
+    ProductService,
   ],
 })
 export class AppModule {}
