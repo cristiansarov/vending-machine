@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, ForbiddenException, Get, Param, Post, Put, Req } from '@nestjs/common';
+import { Body, Controller, Delete, ForbiddenException, Get, Inject, Param, Post, Put, Req } from '@nestjs/common';
 import ProductService from './product.service';
 import { ProductDetails } from './types/product.controllerTypes';
 import { Authenticated } from '../security/decorators/security.decorators';
@@ -8,7 +8,7 @@ import { Request } from 'express';
 
 @Controller('/product')
 export default class ProductController {
-  constructor(private readonly productService: ProductService) {}
+  @Inject() private readonly productService: ProductService;
 
   @Authenticated({ oneOfRoles: [UserRoles.seller] })
   @Post('/')
@@ -16,13 +16,13 @@ export default class ProductController {
     return this.productService.createProduct(body, req.user.id);
   }
 
-  @Authenticated({ oneOfRoles: [UserRoles.seller] })
+  @Authenticated()
   @Get('/')
   getProducts() {
     return this.productService.getProducts();
   }
 
-  @Authenticated({ oneOfRoles: [UserRoles.seller] })
+  @Authenticated()
   @Get('/:productId')
   getProduct(@Param('productId') productId: string) {
     return this.productService.getProduct(parseInt(productId));

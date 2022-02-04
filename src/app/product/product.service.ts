@@ -1,4 +1,4 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { Sequelize } from 'sequelize-typescript';
 import SecurityService from '../security/security.service';
 import ProductModel from '../product/models/product.model';
@@ -12,6 +12,9 @@ export default class ProductService {
   @Inject() private readonly securityService: SecurityService;
 
   async createProduct(body: ProductDetails, sellerId: number): Promise<number> {
+    if (body.cost % 5 !== 0) {
+      throw new BadRequestException('The cost must dividable by 5');
+    }
     const { id } = await this.productRepository.create({ ...body, sellerId });
     return id;
   }
@@ -22,7 +25,10 @@ export default class ProductService {
   }
 
   async getProduct(productId: number): Promise<ProductDetails> {
-    const product = await this.productRepository.findByPk(productId)
+    const product = await this.productRepository.findByPk(productId);
+    if (!product) {
+      throw new NotFoundException();
+    }
     return ProductDetails.fromRepository(product);
   }
 

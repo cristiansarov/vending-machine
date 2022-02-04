@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, ForbiddenException, Get, Param, Post, Put, Req } from '@nestjs/common';
+import { Body, Controller, Delete, ForbiddenException, Get, Inject, Param, Post, Put, Req } from '@nestjs/common';
 import { Request } from 'express';
 import UserService from './user.service';
 import { UserDetails, UserRegistrationDetails } from './types/user.controllerTypes';
@@ -8,7 +8,7 @@ import { UserRoles } from './types/user.types';
 
 @Controller('/user')
 export default class UserController {
-  constructor(private readonly userService: UserService) {}
+  @Inject() private readonly userService: UserService;
 
   @Post('/')
   createUser(@Body() body: UserRegistrationDetails) {

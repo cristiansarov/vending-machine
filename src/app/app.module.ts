@@ -13,6 +13,8 @@ import LocalStrategy from './security/strategies/local.strategy';
 import { SecurityController } from './security/security.controller';
 import ProductService from './product/product.service';
 import ProductController from './product/product.controller';
+import VendingController from './vending/vending.controller';
+import VendingService from './vending/vending.service';
 
 
 @Module({
@@ -28,6 +30,7 @@ import ProductController from './product/product.controller';
     UserController,
     SecurityController,
     ProductController,
+    VendingController,
   ],
   providers: [
     {
@@ -51,6 +54,7 @@ import ProductController from './product/product.controller';
     SecurityService,
     UserService,
     ProductService,
+    VendingService,
   ],
 })
 export class AppModule {}

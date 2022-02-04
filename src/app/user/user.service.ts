@@ -33,7 +33,10 @@ export default class UserService {
   }
 
   async getUser(userId: number): Promise<UserDetails> {
-    const user = await this.userRepository.findByPk(userId)
+    const user = await this.userRepository.findByPk(userId);
+    if (!user) {
+      throw new NotFoundException();
+    }
     return UserDetails.fromRepository(user);
   }
 
