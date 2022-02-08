@@ -1,7 +1,7 @@
 import { applyDecorators, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { UserRoles } from '../../user/types/user.types';
 import { RolesGuard } from '../guards/roles.guard';
+import { UserRoles } from '../../../global/universal.types';
 
 export interface AuthenticatedProps {
   oneOfRoles?: UserRoles[];

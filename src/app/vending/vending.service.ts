@@ -6,11 +6,11 @@ import {
   BuyResponse,
   DepositRequest,
   GetDepositResponse,
-  ResetResponse,
+  WithdrawResponse,
 } from './types/vending.controllerTypes';
 import UserService from '../user/user.service';
 import UserModel from '../user/models/user.model';
-import { depositAmountList } from './types/vending.constants';
+import { depositAmountList } from '../../global/universal.types';
 
 
 @Injectable()
@@ -60,7 +60,7 @@ export default class VendingService {
     })
   }
 
-  async resetDeposit(userId: number): Promise<ResetResponse> {
+  async withdraw(userId: number): Promise<WithdrawResponse> {
     const user = await this.userRepository.findByPk(userId);
     const coinsReturned = this.getCoinsFromDeposit(user.deposit);
     await user.update({ deposit: 0 });

@@ -4,7 +4,7 @@ import {
   IsString,
   IsOptional,
 } from 'class-validator';
-import { UserRoles } from './user.types';
+import { UserRoles } from '../../../global/universal.types';
 
 export class UserRegistrationDetails {
   @IsNotEmpty()

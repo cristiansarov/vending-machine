@@ -1,9 +1,9 @@
 import { Body, Controller, Get, HttpCode, Inject, Param, Post, Req } from '@nestjs/common';
 import VendingService from './vending.service';
 import { Authenticated } from '../security/decorators/security.decorators';
-import { UserRoles } from '../user/types/user.types';
 import { Request } from 'express';
 import { BuyRequest, DepositRequest } from './types/vending.controllerTypes';
+import { UserRoles } from '../../global/universal.types';
 
 
 @Authenticated({ oneOfRoles: [UserRoles.buyer] })
@@ -28,7 +28,7 @@ export default class VendingController {
   }
 
   @Post('/reset')
-  resetDeposit(@Req() req: Request) {
-    return this.vendingService.resetDeposit(req.user.id);
+  withdraw(@Req() req: Request) {
+    return this.vendingService.withdraw(req.user.id);
   }
 }

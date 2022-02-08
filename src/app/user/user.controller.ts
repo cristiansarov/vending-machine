@@ -3,7 +3,7 @@ import { Request } from 'express';
 import UserService from './user.service';
 import { UserDetails, UserRegistrationDetails } from './types/user.controllerTypes';
 import { Authenticated } from '../security/decorators/security.decorators';
-import { UserRoles } from './types/user.types';
+import { UserRoles } from '../../global/universal.types';
 
 
 @Controller('/user')

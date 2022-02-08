@@ -2,8 +2,8 @@ import { Body, Controller, Delete, ForbiddenException, Get, Inject, Param, Post,
 import ProductService from './product.service';
 import { ProductDetails } from './types/product.controllerTypes';
 import { Authenticated } from '../security/decorators/security.decorators';
-import { UserRoles } from '../user/types/user.types';
 import { Request } from 'express';
+import { UserRoles } from '../../global/universal.types';
 
 
 @Controller('/product')

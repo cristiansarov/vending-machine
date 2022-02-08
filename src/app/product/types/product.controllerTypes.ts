@@ -4,6 +4,7 @@ import {
   IsString,
   IsNumber,
 } from 'class-validator';
+import { UProductListItem } from '../../../global/universal.types';
 
 export class ProductDetails {
   @IsNotEmpty()
@@ -31,7 +32,7 @@ export class ProductDetails {
   }
 }
 
-export class ProductListItem {
+export class ProductListItem implements UProductListItem {
   id: number;
   productName: string;
   cost: number;

@@ -1,7 +1,7 @@
 import {
   Body,
   Controller,
-  Get,
+  Get, HttpCode,
   Inject,
   Post,
   Req,
@@ -15,6 +15,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { LoginRequest } from './types/security.controllerTypes';
 import { JwtService } from '@nestjs/jwt';
 import { AUTH_TOKEN_COOKIE_NAME } from './types/security.constants';
+import { config } from 'node-config-ts';
 
 
 @Controller('/security')
@@ -28,8 +29,8 @@ export class SecurityController {
     const token = await this.securityService.generateToken(req.user.id);
     await this.securityService.createUserSession(req.user.id, token);
     const activeSessions = await this.securityService.countActiveUserSessions(req.user.id);
-    res.cookie(AUTH_TOKEN_COOKIE_NAME, token);
-    res.json({ activeSessions });
+    res.cookie(AUTH_TOKEN_COOKIE_NAME, token, { maxAge: config.authToken.expiration * 1000, httpOnly: true });
+    res.status(200).json({ activeSessions });
   }
 
   @Authenticated()

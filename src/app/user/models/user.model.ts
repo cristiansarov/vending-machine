@@ -6,8 +6,8 @@ import {
   HasMany,
 } from 'sequelize-typescript';
 import ProductModel from '../../product/models/product.model';
-import { UserRoles } from '../types/user.types';
 import UserSessionModel from '../../security/models/userSession.model';
+import { UserRoles } from '../../../global/universal.types';
 
 
 @Table({ tableName: 'users', timestamps: false })

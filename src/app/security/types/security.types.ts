@@ -1,12 +1,12 @@
 import { IsEnum, IsNumber, IsString } from 'class-validator';
 import UserModel from '../../user/models/user.model';
-import { UserRoles } from '../../user/types/user.types';
+import { UCurrentUser, UserRoles } from '../../../global/universal.types';
 
 export type JwtTokenPayload = {
   userId: UserModel['id'];
 };
 
-export class CurrentUser {
+export class CurrentUser implements UCurrentUser {
   @IsNumber()
   id: number;
 
