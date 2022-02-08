@@ -16,6 +16,7 @@ export interface UCurrentUser {
   username: string;
   deposit: number;
   role: UserRoles;
+  activeSessions: number;
 }
 
 

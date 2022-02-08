@@ -28,9 +28,8 @@ export class SecurityController {
   async login(@Body() body: LoginRequest, @Req() req: Request, @Res() res: Response) {
     const token = await this.securityService.generateToken(req.user.id);
     await this.securityService.createUserSession(req.user.id, token);
-    const activeSessions = await this.securityService.countActiveUserSessions(req.user.id);
     res.cookie(AUTH_TOKEN_COOKIE_NAME, token, { maxAge: config.authToken.expiration * 1000, httpOnly: true });
-    res.status(200).json({ activeSessions });
+    res.sendStatus(204);
   }
 
   @Authenticated()

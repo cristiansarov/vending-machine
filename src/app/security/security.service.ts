@@ -44,11 +44,14 @@ export default class SecurityService {
   }
 
   async getCurrentUserById(id: UserModel['id']): Promise<CurrentUser> {
-    const user = await this.userRepository.findByPk(id);
+    const [user, activeSessions] = await Promise.all([
+      this.userRepository.findByPk(id),
+      this.countActiveUserSessions(id),
+    ]);
     if (!user) {
       return null;
     }
-    return CurrentUser.fromRepository(user);
+    return CurrentUser.fromRepository(user, activeSessions);
   }
 
   generateToken(userId: number): Promise<string> {
