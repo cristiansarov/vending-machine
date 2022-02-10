@@ -4,7 +4,6 @@ import {
   Get,
   HttpCode,
   Inject,
-  Param,
   Post,
   Req,
 } from '@nestjs/common';
