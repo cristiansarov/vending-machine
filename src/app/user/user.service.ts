@@ -5,6 +5,7 @@ import { JwtService } from '@nestjs/jwt';
 import UserModel from './models/user.model';
 import SecurityService from '../security/security.service';
 import { UserListItem, UserDetails, UserRegistrationDetails } from './types/user.controllerTypes';
+import { UserRoles } from '../../global/universal.types';
 
 
 @Injectable()
@@ -14,10 +15,14 @@ export default class UserService {
   @Inject() private readonly securityService: SecurityService;
   @Inject() jwtService: JwtService;
 
-  async createUser({ password, ...body }: UserRegistrationDetails): Promise<number> {
+  async createUser({ password, ...body }: UserRegistrationDetails, isSeller?: boolean): Promise<number> {
     try {
       const passwordHash = await bcrypt.hash(password, bcrypt.genSaltSync());
-      const { id } = await this.userRepository.create({ passwordHash, ...body });
+      const userDetails: Partial<UserModel> = { passwordHash, ...body };
+      if (isSeller) {
+        userDetails.role = UserRoles.seller;
+      }
+      const { id } = await this.userRepository.create(userDetails);
       return id;
     } catch (e) {
       if (e.name === 'SequelizeUniqueConstraintError') {

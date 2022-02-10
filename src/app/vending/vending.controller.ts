@@ -12,6 +12,7 @@ export default class VendingController {
   @Inject() private readonly vendingService: VendingService;
 
   @Get('/deposit')
+  @HttpCode(200)
   getDepositAmount(@Req() req: Request) {
     return this.vendingService.getDepositAmount(req.user.id);
   }
@@ -23,11 +24,13 @@ export default class VendingController {
   }
 
   @Post('/buy')
+  @HttpCode(200)
   buyProduct(@Body() body: BuyRequest, @Req() req: Request) {
     return this.vendingService.buyProduct(body, req.user.id);
   }
 
   @Post('/reset')
+  @HttpCode(200)
   withdraw(@Req() req: Request) {
     return this.vendingService.withdraw(req.user.id);
   }
