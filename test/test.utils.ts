@@ -11,7 +11,10 @@ export async function initDatabase() {
   await sequelize.sync({ force: true });
 }
 
-export async function loginAndGetCookie(request: supertest.SuperTest<supertest.Test>, credentials: LoginRequest): Promise<string> {
+export async function loginAndGetCookie(
+  request: supertest.SuperTest<supertest.Test>,
+  credentials: LoginRequest,
+): Promise<string> {
   const response = await request.post('/security/login').send(credentials);
   return response.headers['set-cookie'];
 }

@@ -1,14 +1,22 @@
-import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { Sequelize } from 'sequelize-typescript';
 import SecurityService from '../security/security.service';
 import ProductModel from '../product/models/product.model';
-import { ProductDetails, ProductListItem } from './types/product.controllerTypes';
-
+import {
+  ProductDetails,
+  ProductListItem,
+} from './types/product.controllerTypes';
 
 @Injectable()
 export default class ProductService {
   @Inject('sequelize') private readonly sequelize: Sequelize;
-  @Inject('productRepository') private readonly productRepository: typeof ProductModel;
+  @Inject('productRepository')
+  private readonly productRepository: typeof ProductModel;
   @Inject() private readonly securityService: SecurityService;
 
   async createProduct(body: ProductDetails, sellerId: number): Promise<number> {
@@ -32,8 +40,13 @@ export default class ProductService {
     return ProductDetails.fromRepository(product);
   }
 
-  async checkIfProductOwnedBySeller(productId: number, sellerId: number): Promise<boolean> {
-    const product = await this.productRepository.findByPk(productId, { attributes: ['sellerId'] });
+  async checkIfProductOwnedBySeller(
+    productId: number,
+    sellerId: number,
+  ): Promise<boolean> {
+    const product = await this.productRepository.findByPk(productId, {
+      attributes: ['sellerId'],
+    });
     if (!product) {
       throw new NotFoundException();
     }

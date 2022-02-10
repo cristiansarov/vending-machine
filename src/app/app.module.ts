@@ -16,7 +16,6 @@ import ProductController from './product/product.controller';
 import VendingController from './vending/vending.controller';
 import VendingService from './vending/vending.service';
 
-
 @Module({
   imports: [
     JwtModule.registerAsync({

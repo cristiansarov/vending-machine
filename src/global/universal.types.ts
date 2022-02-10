@@ -19,7 +19,6 @@ export interface UCurrentUser {
   activeSessions: number;
 }
 
-
 /*
   Product
  */
@@ -30,7 +29,6 @@ export interface UProductListItem {
   cost: number;
   amountAvailable: number;
 }
-
 
 /*
   Vending

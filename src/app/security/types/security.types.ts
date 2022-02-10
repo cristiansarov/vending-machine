@@ -23,6 +23,6 @@ export class CurrentUser implements UCurrentUser {
       deposit: props.deposit,
       role: props.role,
       activeSessions,
-    })
+    });
   }
 }

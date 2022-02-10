@@ -1,4 +1,9 @@
-import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { Sequelize } from 'sequelize-typescript';
 import ProductModel from '../product/models/product.model';
 import {
@@ -12,11 +17,11 @@ import UserService from '../user/user.service';
 import UserModel from '../user/models/user.model';
 import { depositAmountList } from '../../global/universal.types';
 
-
 @Injectable()
 export default class VendingService {
   @Inject('sequelize') private readonly sequelize: Sequelize;
-  @Inject('productRepository') private readonly productRepository: typeof ProductModel;
+  @Inject('productRepository')
+  private readonly productRepository: typeof ProductModel;
   @Inject('userRepository') private readonly userRepository: typeof UserModel;
   @Inject() private readonly userService: UserService;
 
@@ -30,7 +35,10 @@ export default class VendingService {
     await user.update({ deposit: user.deposit + amount });
   }
 
-  buyProduct({ productId, amount }: BuyRequest, userId: number): Promise<BuyResponse> {
+  buyProduct(
+    { productId, amount }: BuyRequest,
+    userId: number,
+  ): Promise<BuyResponse> {
     return this.sequelize.transaction(async (transaction) => {
       const [product, user] = await Promise.all([
         this.productRepository.findByPk(productId, { lock: true, transaction }),
@@ -42,7 +50,9 @@ export default class VendingService {
       }
       const totalCost = product.cost * amount;
       if (user.deposit < totalCost) {
-        throw new BadRequestException('You don\'t have enough money in your deposit');
+        throw new BadRequestException(
+          "You don't have enough money in your deposit",
+        );
       }
       if (product.amountAvailable < amount) {
         throw new BadRequestException('The product does not have enough stock');
@@ -56,8 +66,8 @@ export default class VendingService {
       return {
         totalSpent: totalCost,
         amountRemaining: user.deposit - totalCost,
-      }
-    })
+      };
+    });
   }
 
   async withdraw(userId: number): Promise<WithdrawResponse> {
@@ -68,7 +78,7 @@ export default class VendingService {
   }
 
   private getCoinsFromDeposit(deposit: number): number[] {
-    const reverseCoinList = depositAmountList.sort((a, b) => a > b ? -1 : 1);
+    const reverseCoinList = depositAmountList.sort((a, b) => (a > b ? -1 : 1));
     const finalCoinList = [];
     let oldDeposit = deposit;
     for (const coin of reverseCoinList) {

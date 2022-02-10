@@ -6,15 +6,18 @@ import { CurrentUser } from './types/security.types';
 import UserModel from '../user/models/user.model';
 import UserSessionModel from './models/userSession.model';
 
-
 @Injectable()
 export default class SecurityService {
   @Inject('sequelize') sequelize: Sequelize;
-  @Inject('userSessionRepository') userSessionRepository: typeof UserSessionModel;
+  @Inject('userSessionRepository')
+  userSessionRepository: typeof UserSessionModel;
   @Inject('userRepository') userRepository: typeof UserModel;
   @Inject() jwtService: JwtService;
 
-  async validateCredentials(username: string, password: string): Promise<UserModel['id']> {
+  async validateCredentials(
+    username: string,
+    password: string,
+  ): Promise<UserModel['id']> {
     const user = await this.userRepository.findOne({
       where: { username },
       attributes: ['id', 'passwordHash'],

@@ -1,9 +1,7 @@
+import { IsEnum, IsNotEmpty, IsNumber } from 'class-validator';
 import {
-  IsEnum,
-  IsNotEmpty, IsNumber,
-} from 'class-validator';
-import {
-  depositAmountList, UBuyRequest,
+  depositAmountList,
+  UBuyRequest,
   UDepositRequest,
   UGetDepositResponse,
   UWithdrawResponse,
@@ -11,7 +9,9 @@ import {
 
 export class DepositRequest implements UDepositRequest {
   @IsNotEmpty()
-  @IsEnum(depositAmountList, { message: `It must be one of ${depositAmountList.join(', ')}` })
+  @IsEnum(depositAmountList, {
+    message: `It must be one of ${depositAmountList.join(', ')}`,
+  })
   amount: number;
 }
 
@@ -37,4 +37,3 @@ export class BuyResponse {
 export class WithdrawResponse implements UWithdrawResponse {
   coinsReturned: number[];
 }
-

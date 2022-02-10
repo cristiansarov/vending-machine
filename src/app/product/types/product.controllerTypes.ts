@@ -1,9 +1,5 @@
 import ProductModel from '../models/product.model';
-import {
-  IsNotEmpty,
-  IsString,
-  IsNumber,
-} from 'class-validator';
+import { IsNotEmpty, IsString, IsNumber } from 'class-validator';
 import { UProductListItem } from '../../../global/universal.types';
 
 export class ProductDetails {
@@ -28,7 +24,7 @@ export class ProductDetails {
       productName: props.productName,
       cost: props.cost,
       amountAvailable: props.amountAvailable,
-    })
+    });
   }
 }
 
@@ -48,6 +44,6 @@ export class ProductListItem implements UProductListItem {
       productName: props.productName,
       cost: props.cost,
       amountAvailable: props.amountAvailable,
-    })
+    });
   }
 }

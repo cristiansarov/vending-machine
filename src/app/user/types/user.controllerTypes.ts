@@ -1,9 +1,5 @@
 import UserModel from '../models/user.model';
-import {
-  IsNotEmpty,
-  IsString,
-  IsOptional,
-} from 'class-validator';
+import { IsNotEmpty, IsString, IsOptional } from 'class-validator';
 import { UserRoles } from '../../../global/universal.types';
 
 export class UserRegistrationDetails {
@@ -32,7 +28,7 @@ export class UserDetails {
   static fromRepository(props: UserModel) {
     return new UserDetails({
       username: props.username,
-    })
+    });
   }
 }
 
@@ -50,6 +46,6 @@ export class UserListItem {
       id: props.id,
       username: props.username,
       role: props.role,
-    })
+    });
   }
 }

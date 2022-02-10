@@ -22,8 +22,14 @@ describe('app', () => {
   let vendingService: VendingService;
   let buyerUserId: number;
   let sellerUserId: number;
-  const buyerCredentials: LoginRequest = { username: 'buyer', password: 'test' };
-  const sellerCredentials: LoginRequest = { username: 'seller', password: 'test' };
+  const buyerCredentials: LoginRequest = {
+    username: 'buyer',
+    password: 'test',
+  };
+  const sellerCredentials: LoginRequest = {
+    username: 'seller',
+    password: 'test',
+  };
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -31,8 +37,10 @@ describe('app', () => {
     }).compile();
 
     app = moduleFixture.createNestApplication();
-    app.use(cookieParser())
-    app.useGlobalPipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }));
+    app.use(cookieParser());
+    app.useGlobalPipes(
+      new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }),
+    );
 
     await initDatabase();
     await app.init();
@@ -41,7 +49,9 @@ describe('app', () => {
     userService = await app.resolve(UserService);
     userRepository = await app.resolve<typeof UserModel>('userRepository');
     productService = await app.resolve(ProductService);
-    productRepository = await app.resolve<typeof ProductModel>('productRepository');
+    productRepository = await app.resolve<typeof ProductModel>(
+      'productRepository',
+    );
     vendingService = await app.resolve(VendingService);
 
     buyerUserId = await userService.createUser(buyerCredentials);
@@ -61,7 +71,9 @@ describe('app', () => {
     const incorrectAmount = 7;
 
     it('It should fail the deposit if not logged in', async () => {
-      const response = await requester.post('/vending/deposit').send({ amount: correctAmount })
+      const response = await requester
+        .post('/vending/deposit')
+        .send({ amount: correctAmount });
 
       expect(response.statusCode).toBe(401);
     });
@@ -69,7 +81,10 @@ describe('app', () => {
     it('It should fail the deposit if the user role is wrong', async () => {
       const cookie = await loginAndGetCookie(requester, sellerCredentials);
 
-      const response = await requester.post('/vending/deposit').set('Cookie', cookie).send({ amount: incorrectAmount })
+      const response = await requester
+        .post('/vending/deposit')
+        .set('Cookie', cookie)
+        .send({ amount: incorrectAmount });
 
       expect(response.statusCode).toBe(403);
     });
@@ -77,7 +92,10 @@ describe('app', () => {
     it('It should fail the deposit if the amount is wrong', async () => {
       const cookie = await loginAndGetCookie(requester, buyerCredentials);
 
-      const response = await requester.post('/vending/deposit').set('Cookie', cookie).send({ amount: incorrectAmount })
+      const response = await requester
+        .post('/vending/deposit')
+        .set('Cookie', cookie)
+        .send({ amount: incorrectAmount });
 
       expect(response.statusCode).toBe(400);
     });
@@ -85,10 +103,13 @@ describe('app', () => {
     it('It should successfully deposit the amount of money', async () => {
       const cookie = await loginAndGetCookie(requester, buyerCredentials);
 
-      const response = await requester.post('/vending/deposit').set('Cookie', cookie).send({ amount: correctAmount })
+      const response = await requester
+        .post('/vending/deposit')
+        .set('Cookie', cookie)
+        .send({ amount: correctAmount });
 
       expect(response.statusCode).toBe(204);
-      const {deposit} = await userRepository.findByPk(buyerUserId)
+      const { deposit } = await userRepository.findByPk(buyerUserId);
       expect(deposit).toBe(correctAmount);
     });
   });
@@ -103,7 +124,10 @@ describe('app', () => {
     };
 
     beforeAll(async () => {
-      createdProductId = await productService.createProduct(productDetails, sellerUserId);
+      createdProductId = await productService.createProduct(
+        productDetails,
+        sellerUserId,
+      );
     });
 
     afterEach(async () => {
@@ -111,7 +135,9 @@ describe('app', () => {
     });
 
     it('It should fail buying the product if not logged in', async () => {
-      const response = await requester.post('/vending/buy').send({ productId: createdProductId, amount: 1 })
+      const response = await requester
+        .post('/vending/buy')
+        .send({ productId: createdProductId, amount: 1 });
 
       expect(response.statusCode).toBe(401);
     });
@@ -119,7 +145,10 @@ describe('app', () => {
     it('It should fail buying the product if the user role is wrong', async () => {
       const cookie = await loginAndGetCookie(requester, sellerCredentials);
 
-      const response = await requester.post('/vending/buy').set('Cookie', cookie).send({ productId: createdProductId, amount: 1 })
+      const response = await requester
+        .post('/vending/buy')
+        .set('Cookie', cookie)
+        .send({ productId: createdProductId, amount: 1 });
 
       expect(response.statusCode).toBe(403);
     });
@@ -127,30 +156,49 @@ describe('app', () => {
     it('It should fail buying the product if no money deposited', async () => {
       const cookie = await loginAndGetCookie(requester, buyerCredentials);
 
-      const response = await requester.post('/vending/buy').set('Cookie', cookie).send({ productId: createdProductId, amount: 1 })
+      const response = await requester
+        .post('/vending/buy')
+        .set('Cookie', cookie)
+        .send({ productId: createdProductId, amount: 1 });
 
       expect(response.statusCode).toBe(400);
     });
 
     it('It should fail buying the product if the request body is wrong', async () => {
       const cookie = await loginAndGetCookie(requester, buyerCredentials);
-      await requester.post('/vending/deposit').set('Cookie', cookie).send({ amount: amountDeposited })
+      await requester
+        .post('/vending/deposit')
+        .set('Cookie', cookie)
+        .send({ amount: amountDeposited });
 
-      const response = await requester.post('/vending/buy').set('Cookie', cookie).send({ randomStuff: true })
+      const response = await requester
+        .post('/vending/buy')
+        .set('Cookie', cookie)
+        .send({ randomStuff: true });
 
       expect(response.statusCode).toBe(400);
     });
 
     it('It should successfully buy the product', async () => {
       const cookie = await loginAndGetCookie(requester, buyerCredentials);
-      await requester.post('/vending/deposit').set('Cookie', cookie).send({ amount: amountDeposited })
+      await requester
+        .post('/vending/deposit')
+        .set('Cookie', cookie)
+        .send({ amount: amountDeposited });
 
-      const response = await requester.post('/vending/buy').set('Cookie', cookie).send({ productId: createdProductId, amount: 1 })
+      const response = await requester
+        .post('/vending/buy')
+        .set('Cookie', cookie)
+        .send({ productId: createdProductId, amount: 1 });
 
       expect(response.statusCode).toBe(200);
       expect(response.body.totalSpent).toBe(productDetails.cost);
-      expect(response.body.amountRemaining).toBe(amountDeposited - productDetails.cost);
-      const product = await productRepository.findByPk(createdProductId, { raw: true })
+      expect(response.body.amountRemaining).toBe(
+        amountDeposited - productDetails.cost,
+      );
+      const product = await productRepository.findByPk(createdProductId, {
+        raw: true,
+      });
       expect(product).toStrictEqual({
         ...productDetails,
         id: createdProductId,
@@ -168,7 +216,7 @@ describe('app', () => {
     };
 
     it('It should fail creating the product if not logged in', async () => {
-      const response = await requester.post('/product').send(productDetails)
+      const response = await requester.post('/product').send(productDetails);
 
       expect(response.statusCode).toBe(401);
     });
@@ -176,7 +224,10 @@ describe('app', () => {
     it('It should fail creating the product if the role is wrong', async () => {
       const cookie = await loginAndGetCookie(requester, buyerCredentials);
 
-      const response = await requester.post('/product').set('Cookie', cookie).send(productDetails)
+      const response = await requester
+        .post('/product')
+        .set('Cookie', cookie)
+        .send(productDetails);
 
       expect(response.statusCode).toBe(403);
     });
@@ -184,7 +235,10 @@ describe('app', () => {
     it('It should fail creating the product if the body is wrong', async () => {
       const cookie = await loginAndGetCookie(requester, sellerCredentials);
 
-      const response = await requester.post('/product').set('Cookie', cookie).send({ randomStuff: true })
+      const response = await requester
+        .post('/product')
+        .set('Cookie', cookie)
+        .send({ randomStuff: true });
 
       expect(response.statusCode).toBe(400);
     });
@@ -192,12 +246,17 @@ describe('app', () => {
     it('It should successfully create the product', async () => {
       const cookie = await loginAndGetCookie(requester, sellerCredentials);
 
-      const response = await requester.post('/product').set('Cookie', cookie).send(productDetails)
+      const response = await requester
+        .post('/product')
+        .set('Cookie', cookie)
+        .send(productDetails);
 
       expect(response.statusCode).toBe(201);
       const productId = parseInt(response.text);
       expect(productId).not.toBeNaN();
-      const product = await productRepository.findByPk(productId, { raw: true })
+      const product = await productRepository.findByPk(productId, {
+        raw: true,
+      });
       expect(product).toStrictEqual({
         ...productDetails,
         id: productId,

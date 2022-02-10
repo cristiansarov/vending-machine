@@ -1,7 +1,7 @@
 import {
   Body,
   Controller,
-  Get, HttpCode,
+  Get,
   Inject,
   Post,
   Req,
@@ -17,7 +17,6 @@ import { JwtService } from '@nestjs/jwt';
 import { AUTH_TOKEN_COOKIE_NAME } from './types/security.constants';
 import { config } from 'node-config-ts';
 
-
 @Controller('/security')
 export class SecurityController {
   @Inject() private readonly securityService: SecurityService;
@@ -25,10 +24,17 @@ export class SecurityController {
 
   @UseGuards(AuthGuard('local'))
   @Post('/login')
-  async login(@Body() body: LoginRequest, @Req() req: Request, @Res() res: Response) {
+  async login(
+    @Body() body: LoginRequest,
+    @Req() req: Request,
+    @Res() res: Response,
+  ) {
     const token = await this.securityService.generateToken(req.user.id);
     await this.securityService.createUserSession(req.user.id, token);
-    res.cookie(AUTH_TOKEN_COOKIE_NAME, token, { maxAge: config.authToken.expiration * 1000, httpOnly: true });
+    res.cookie(AUTH_TOKEN_COOKIE_NAME, token, {
+      maxAge: config.authToken.expiration * 1000,
+      httpOnly: true,
+    });
     res.sendStatus(204);
   }
 
@@ -41,8 +47,11 @@ export class SecurityController {
   @Authenticated()
   @Post('/logout')
   async logout(@Req() req: Request, @Res() res: Response) {
-    await this.securityService.removeUserSession(req.user.id, req.cookies.authToken);
-    res.clearCookie(AUTH_TOKEN_COOKIE_NAME)
+    await this.securityService.removeUserSession(
+      req.user.id,
+      req.cookies.authToken,
+    );
+    res.clearCookie(AUTH_TOKEN_COOKIE_NAME);
     res.sendStatus(204);
   }
 
@@ -50,7 +59,7 @@ export class SecurityController {
   @Post('/logout/all')
   async logoutAll(@Req() req: Request, @Res() res: Response) {
     await this.securityService.removeAllUserSessions(req.user.id);
-    res.clearCookie(AUTH_TOKEN_COOKIE_NAME)
+    res.clearCookie(AUTH_TOKEN_COOKIE_NAME);
     res.sendStatus(204);
   }
 }

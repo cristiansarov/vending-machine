@@ -3,7 +3,6 @@ import * as ST from 'sequelize-typescript';
 import { config } from 'node-config-ts';
 import * as path from 'path';
 
-
 export default function sequelizeFactory() {
   const sequelize = new ST.Sequelize(config.database as Options);
 

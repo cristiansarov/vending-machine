@@ -8,7 +8,6 @@ import {
 } from 'sequelize-typescript';
 import UserModel from '../../user/models/user.model';
 
-
 @Table({ tableName: 'userSessions', timestamps: false })
 export default class UserSessionModel extends Model {
   id: number;

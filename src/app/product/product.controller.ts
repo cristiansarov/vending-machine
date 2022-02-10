@@ -1,10 +1,20 @@
-import { Body, Controller, Delete, ForbiddenException, Get, Inject, Param, Post, Put, Req } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  ForbiddenException,
+  Get,
+  Inject,
+  Param,
+  Post,
+  Put,
+  Req,
+} from '@nestjs/common';
 import ProductService from './product.service';
 import { ProductDetails } from './types/product.controllerTypes';
 import { Authenticated } from '../security/decorators/security.decorators';
 import { Request } from 'express';
 import { UserRoles } from '../../global/universal.types';
-
 
 @Controller('/product')
 export default class ProductController {
@@ -30,8 +40,16 @@ export default class ProductController {
 
   @Authenticated({ oneOfRoles: [UserRoles.seller] })
   @Put('/:productId')
-  async updateProduct(@Param('productId') productId: string, @Body() body: ProductDetails, @Req() req: Request) {
-    const isProductOwnedBySeller = await this.productService.checkIfProductOwnedBySeller(parseInt(productId), req.user.id);
+  async updateProduct(
+    @Param('productId') productId: string,
+    @Body() body: ProductDetails,
+    @Req() req: Request,
+  ) {
+    const isProductOwnedBySeller =
+      await this.productService.checkIfProductOwnedBySeller(
+        parseInt(productId),
+        req.user.id,
+      );
     if (!isProductOwnedBySeller) {
       throw new ForbiddenException('The current user does not own the product');
     }
@@ -40,8 +58,15 @@ export default class ProductController {
 
   @Authenticated({ oneOfRoles: [UserRoles.seller] })
   @Delete('/:productId')
-  async deleteProduct(@Param('productId') productId: string, @Req() req: Request) {
-    const isProductOwnedBySeller = await this.productService.checkIfProductOwnedBySeller(parseInt(productId), req.user.id);
+  async deleteProduct(
+    @Param('productId') productId: string,
+    @Req() req: Request,
+  ) {
+    const isProductOwnedBySeller =
+      await this.productService.checkIfProductOwnedBySeller(
+        parseInt(productId),
+        req.user.id,
+      );
     if (!isProductOwnedBySeller) {
       throw new ForbiddenException('The current user does not own the product');
     }
